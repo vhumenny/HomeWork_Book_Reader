@@ -1,0 +1,8 @@
+Splitting Strings is a very frequent operation; this quick tutorial is focused on some of the API
+we can use to do this simply in Java.
+Let's start with the core library – the String class itself offers a split() method –
+which is very convenient and sufficient for most scenarios.
+It simply splits the given String based on the delimiter, returning an array of Strings.
+Let's now split by multiple characters – a comma, space, and hyphen through regex.
+Apache's common lang package provides a StringUtils class – which contains a null-safe split() method,
+that splits using whitespace as the default delimiter.
