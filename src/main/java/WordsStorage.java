@@ -9,7 +9,7 @@ public class WordsStorage {
     private final Map<String, Long> popularWords = new HashMap<>();
     private Long distinctWordsCounter;
 
-    public Map<String, Long> processBookWords(List<String> bookStrings) {
+    public Map<String, Long> processWords(List<String> bookStrings) {
         getPopularWords(bookStrings);
         countDistinctWords(bookStrings);
         printStatisticToConsole();
@@ -31,7 +31,7 @@ public class WordsStorage {
     private void getPopularWords(List<String> bookStrings) {
         bookStrings.stream()
                 .filter(s -> s.length() > 2)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
                 .entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(10)
