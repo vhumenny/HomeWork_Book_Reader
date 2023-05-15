@@ -1,22 +1,31 @@
-import java.io.File;
 import java.nio.file.FileSystems;
+import java.util.List;
 import java.util.Scanner;
 
 public class AppRunner {
-    private static final String USER_DIRECTORY = System.getProperty("user.dir") + FileSystems.getDefault().getSeparator();
+    private final PopularWordsStorage popularWordsStorage = new PopularWordsStorage();
+    private static final String USER_DIRECTORY = System.getProperty("user.dir")
+                                                 + FileSystems.getDefault().getSeparator();
+
 
     public void start() {
-        System.out.println("Please enter book name: ");
-        String bookName = new Scanner(System.in).next();
-        File file = new File(USER_DIRECTORY + bookName);
-        while (!file.exists()) {
-            System.out.println("Such book doesn't exist! " +
-                               "Please enter correct file name! (example - " + "book.txt) or enter exit.");
-            bookName = new Scanner(System.in).next();
-            file = new File(USER_DIRECTORY + bookName);
-            if (bookName.equals("exit")) return;
-        }
-        String fileLocation = USER_DIRECTORY + bookName;
-        new FileHandler().handleFile(fileLocation, new WordsStorage());
+        FileHandler fileHandler = new FileHandler();
+        System.out.println("Please enter book name:");
+        Scanner scanner = new Scanner(System.in);
+        String fileLocation = USER_DIRECTORY + scanner.next();
+        scanner.close();
+        List<String> stringList = fileHandler.readFile(fileLocation);
+        List<String> parsedStrings = popularWordsStorage.parse(stringList);
+        popularWordsStorage.countDistinctWords(parsedStrings);
+        popularWordsStorage.collectPopularWords(parsedStrings);
+
+        String result = popularWordsStorage.collectResultToString();
+        fileHandler.writeFile(result);
+        printStatisticToConsole(result);
+    }
+
+
+    public void printStatisticToConsole(String result) {
+        System.out.println(result);
     }
 }
