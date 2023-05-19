@@ -1,14 +1,14 @@
+package fileHandlers;
+
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Files.newBufferedReader;
 import static java.nio.file.Files.newBufferedWriter;
 
-public class FileHandler {
+public class TxtFileHandler {
 
     private static final String OUTPUT_FILE = "_statistic.txt";
     private String fileLocation;
@@ -21,7 +21,8 @@ public class FileHandler {
         }
     }
 
-    public List<String> readFile(String fileLocation) {
+    public List<String> readFile(String location) {
+        fileLocation = location;
         try (var reader = newBufferedReader(Path.of((fileLocation)))) {
             return reader.lines().collect(Collectors.toList());
         } catch (IOException e) {

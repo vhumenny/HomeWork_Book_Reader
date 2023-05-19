@@ -1,5 +1,3 @@
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +6,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Getter
-public class PopularWordsStorage {
+public class StringHandler {
 
     private final Map<String, Long> popularWordsMap = new HashMap<>();
     private Long distinctWordsCounter;
