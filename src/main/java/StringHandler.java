@@ -1,4 +1,5 @@
-import java.util.HashMap;
+import entity.Book;
+
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -7,11 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringHandler {
-
-    private final Map<String, Long> popularWordsMap = new HashMap<>();
-    private Long distinctWordsCounter;
     private static final Pattern PATTERN = Pattern.compile("\\w+");
-
 
     public List<String> parse(List<String> lines) {
         return lines
@@ -22,7 +19,10 @@ public class StringHandler {
                 .collect(Collectors.toList());
     }
 
-    public String collectResultToString() {
+    public String collectResultToString(List<String> bookStrings) {
+        long distinctWordsCounter = countDistinctWords(bookStrings);
+        Map<String, Long> popularWordsMap = collectPopularWords(bookStrings);
+
         String popularWords = popularWordsMap
                 .entrySet()
                 .stream()
@@ -32,21 +32,27 @@ public class StringHandler {
     }
 
     public long countDistinctWords(List<String> bookStrings) {
-        distinctWordsCounter = bookStrings.stream()
+        return bookStrings.stream()
                 .filter(s -> s.length() > 2)
                 .distinct()
                 .count();
-        return distinctWordsCounter;
     }
 
-    public void collectPopularWords(List<String> bookStrings) {
+    public Map<String, Long> collectPopularWords(List<String> bookStrings) {
         long amountOfWords = 10L;
-        bookStrings.stream()
+        return bookStrings.stream()
                 .filter(s -> s.length() > 2)
                 .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
                 .entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(amountOfWords)
-                .forEach(entry -> popularWordsMap.put(entry.getKey(), entry.getValue()));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public Book createBook(List<String> strings) {
+        String bookName = strings.get(0);
+        String author = strings.get(2).replaceAll("by", "").stripLeading();
+        strings.subList(0, 4).clear();
+        return new Book(bookName, author, strings);
     }
 }

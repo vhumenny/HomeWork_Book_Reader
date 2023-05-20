@@ -2,7 +2,6 @@ import entity.Book;
 import fileHandlers.JsonFileHandler;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -14,25 +13,20 @@ public class BookCatalog {
     public BookCatalog() {
         fileHandler = new JsonFileHandler();
         this.bookMap = fileHandler.readFile();
-
     }
 
-    public Book addBook(List<String> strings) {
-        Book book = createBook(strings);
-        bookMap.put(book.getBookName(), book);
-        return book;
+    public void addBook(Book book) {
+        if (bookMap.containsKey(book.getBookName()))
+            throw new IllegalArgumentException(book.getBookName() + " has already been added in catalog!");
+        else bookMap.put(book.getBookName(), book);
     }
 
-    private Book createBook(List<String> strings) {
-        String bookName = strings.get(0);
-        String author = strings.get(2).replaceAll("by", "").stripLeading();
-        strings.subList(0, 4).clear();
-        return new Book(bookName, author, strings);
+    public void removeBook(String bookName) {
+        if (bookMap.containsKey(bookName)) bookMap.remove(bookName);
+        else throw new IllegalArgumentException("There is no book " + bookName + " in catalog!");
     }
 
-    public Book removeBook(String bookName) {
-        return bookMap.remove(bookName);
+    public void saveCatalog() {
+        fileHandler.writeFile(bookMap);
     }
-
-
 }

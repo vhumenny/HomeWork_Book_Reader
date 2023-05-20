@@ -9,61 +9,58 @@ import java.util.Scanner;
 public class AppRunner {
     private final StringHandler stringHandler = new StringHandler();
     private final TxtFileHandler txtFileHandler = new TxtFileHandler();
+    private final ConsolePrinter consolePrinter = new ConsolePrinter();
     private static final String USER_DIRECTORY = System.getProperty("user.dir")
                                                  + FileSystems.getDefault().getSeparator();
     private final Scanner scanner = new Scanner(System.in);
 
     public void start() {
-        BookCatalog catalog = new BookCatalog();
-        receiveCommand();
-
-        List<String> stringList = txtFileHandler.readFile(bookLocation);
-
-        Book book = catalog.addBook(stringList);
-
-        List<String> parsedStrings = stringHandler.parse(book.getTextLines());
-        stringHandler.countDistinctWords(parsedStrings);
-        stringHandler.collectPopularWords(parsedStrings);
-
-
-        String result = stringHandler.collectResultToString();
-        txtFileHandler.writeFile(result);
-        printStatisticToConsole(result);
-
-        catalog.getFileHandler().writeFile(catalog.getBookMap());
-    }
-
-    private void receiveCommand() {
-        ConsolePrinter consolePrinter = new ConsolePrinter();
         consolePrinter.printConsoleCommands();
         Commands command = Commands.fromTitle(scanner.next());
-        List<String> stringList = null;
+        receiveCommand(command);
+    }
+
+    private void receiveCommand(Commands command) {
+        BookCatalog catalog = new BookCatalog();
         while (!Objects.equals(command, Commands.EXIT)) {
-            consolePrinter.printConsoleCommands();
             switch (command) {
-                case ADD_BOOK -> ;
-                case DELETE_BOOK -> ;
-                case PARSE -> stringList = txtFileHandler.readFile(bookLocation);
-                case WRITE_STATISTIC -> ;
-                case PRINT_STATISTIC -> ;
-                case EXIT -> ;
+                case ADD_BOOK -> addBook(catalog);
+                case DELETE_BOOK -> {
+                    String bookName = getBookLocation();
+                    catalog.removeBook(bookName);
+                }
+                case READ_CATALOG -> System.out.println(catalog.getBookMap());
+                case EXIT -> {
+                    return;
+                }
                 case NOT_FOUND -> System.out.println("You entered incorrect command. Please try again!");
             }
-            System.out.println("Please enter command:");
+            consolePrinter.printConsoleCommands();
             command = Commands.fromTitle(scanner.next());
         }
-
+        catalog.saveCatalog();
     }
 
-    private static String getBookLocation() {
+    private void addBook(BookCatalog catalog) {
+        String bookName = getBookLocation();
+        List<String> stringList = txtFileHandler.readFile(bookName);
+        Book book = stringHandler.createBook(stringList);
+        catalog.addBook(book);
+        List<String> parsedStrings = stringHandler.parse(book.getTextLines());
+        consolePrinter.printStatisticTips();
+
+        Commands command = Commands.fromTitle(scanner.next());
+        String result = stringHandler.collectResultToString(parsedStrings);
+        switch (command) {
+            case PRINT_STATISTIC -> consolePrinter.printStatisticToConsole(result);
+            case WRITE_STATISTIC -> txtFileHandler.writeFile(result);
+        }
+    }
+
+    private String getBookLocation() {
         System.out.println("Please enter book name:");
-        Scanner scanner = new Scanner(System.in);
         String name = scanner.next();
-        if (name.equals("exit")) return name;
+        if (!name.endsWith(".txt")) return name;
         else return USER_DIRECTORY + name;
-    }
-
-    public void printStatisticToConsole(String result) {
-        System.out.println(result);
     }
 }

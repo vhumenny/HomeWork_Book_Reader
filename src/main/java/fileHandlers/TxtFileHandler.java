@@ -17,7 +17,7 @@ public class TxtFileHandler {
         try (var writer = newBufferedWriter(Path.of(fileLocation + OUTPUT_FILE))) {
             writer.write(resultString);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -26,7 +26,8 @@ public class TxtFileHandler {
         try (var reader = newBufferedReader(Path.of((fileLocation)))) {
             return reader.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException("Book doesn't exist!");
+            e.printStackTrace();
+            throw new RuntimeException("Book doesn't exist!" + e);
         }
     }
 }

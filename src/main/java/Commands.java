@@ -1,10 +1,9 @@
 public enum Commands {
-    PARSE("parse"),
-    WRITE_STATISTIC("write statistic"),
-    PRINT_STATISTIC("print statistic"),
-    READ_CATALOG("read catalog"),
-    ADD_BOOK("add book"),
-    DELETE_BOOK("delete book"),
+    WRITE_STATISTIC("write"),
+    PRINT_STATISTIC("print"),
+    READ_CATALOG("read"),
+    ADD_BOOK("add"),
+    DELETE_BOOK("delete"),
     EXIT("exit"),
     NOT_FOUND("Not found");
 
@@ -16,14 +15,10 @@ public enum Commands {
 
     public static Commands fromTitle(String title) {
         for (Commands command : values()) {
-            if (command.title.equals(title)) {
+            if (command.title.equalsIgnoreCase(title)) {
                 return command;
             }
         }
         return NOT_FOUND;
-    }
-
-    public String getTitle() {
-        return title;
     }
 }
