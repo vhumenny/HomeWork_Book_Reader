@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class StringHandler {
     private static final Pattern PATTERN = Pattern.compile("\\w+");
 
-    public List<String> parse(List<String> lines) {
+    public List<String> parseBookText(List<String> lines) {
         return lines
                 .stream()
                 .flatMap(str -> PATTERN.matcher(str).results())
@@ -19,9 +19,10 @@ public class StringHandler {
                 .collect(Collectors.toList());
     }
 
-    public String collectResultToString(List<String> bookStrings) {
-        long distinctWordsCounter = countDistinctWords(bookStrings);
-        Map<String, Long> popularWordsMap = collectPopularWords(bookStrings);
+    public String collectStatisticToString(List<String> bookStrings) {
+        List<String> parsedStrings = parseBookText(bookStrings);
+        long distinctWordsCounter = countDistinctWords(parsedStrings);
+        Map<String, Long> popularWordsMap = collectPopularWords(parsedStrings);
 
         String popularWords = popularWordsMap
                 .entrySet()
@@ -54,5 +55,14 @@ public class StringHandler {
         String author = strings.get(2).replaceAll("by", "").stripLeading();
         strings.subList(0, 4).clear();
         return new Book(bookName, author, strings);
+    }
+
+    public Commands parseCommand(String title) {
+        for (Commands command : Commands.values()) {
+            if (command.getTitle().equalsIgnoreCase(title)) {
+                return command;
+            }
+        }
+        return Commands.NOT_FOUND;
     }
 }

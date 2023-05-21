@@ -29,9 +29,9 @@ public class JsonFileHandler {
         return bookMap;
     }
 
-    public void writeFile(Map<String, Book> bookMap) {
+    public void writeFile(List<Book> bookList) {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileLocation, bookMap.values());
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileLocation, bookList);
         } catch (IOException e) {
             e.printStackTrace();
         }

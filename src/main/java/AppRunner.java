@@ -10,62 +10,65 @@ public class AppRunner {
     private final StringHandler stringHandler = new StringHandler();
     private final TxtFileHandler txtFileHandler = new TxtFileHandler();
     private final ConsolePrinter consolePrinter = new ConsolePrinter();
+    private final BookCatalog catalog = new BookCatalog();
     private static final String USER_DIRECTORY = System.getProperty("user.dir")
                                                  + FileSystems.getDefault().getSeparator();
-    private final Scanner scanner = new Scanner(System.in);
 
     public void start() {
         consolePrinter.printConsoleCommands();
-        Commands command = Commands.fromTitle(scanner.next());
-        receiveCommand(command);
-    }
-
-    private void receiveCommand(Commands command) {
-        BookCatalog catalog = new BookCatalog();
+        Scanner scanner = new Scanner(System.in);
+        scanner.useDelimiter("\n");
+        Commands command = stringHandler.parseCommand(scanner.next());
         while (!Objects.equals(command, Commands.EXIT)) {
-            switch (command) {
-                case ADD_BOOK -> addBook(catalog);
-                case DELETE_BOOK -> {
-                    String bookName = getBookName();
-                    catalog.removeBook(bookName);
-                }
-                case READ_CATALOG -> System.out.println(catalog.getBookMap());
-                case EXIT -> {
-                    return;
-                }
-                case NOT_FOUND -> System.out.println("You entered incorrect command. Please try again!");
-            }
+            executeCommand(command, scanner);
             consolePrinter.printConsoleCommands();
-            command = Commands.fromTitle(scanner.next());
+            command = stringHandler.parseCommand(scanner.next());
         }
         catalog.saveCatalog();
+        scanner.close();
     }
 
-    private void addBook(BookCatalog catalog) {
-        String fileLocation = getBookLocation();
+    private void executeCommand(Commands command, Scanner scanner) {
+        switch (command) {
+            case ADD_BOOK -> addBook(catalog, scanner);
+            case DELETE_BOOK -> {
+                String bookName = getBookName(scanner);
+                catalog.removeBook(bookName);
+            }
+            case READ_CATALOG -> System.out.println(catalog.getBookMap());
+            case PRINT_STATISTIC -> {
+                String result = getResult(scanner);
+                consolePrinter.printStatisticToConsole(result);
+            }
+            case WRITE_STATISTIC -> {
+                String result = getResult(scanner);
+                txtFileHandler.writeFile(result);
+            }
+            case NOT_FOUND -> System.out.println("You entered incorrect command. Please try again!");
+        }
+    }
+
+    private String getResult(Scanner scanner) {
+        String bookName = getBookName(scanner);
+        Book book = catalog.getBook(bookName);
+        return stringHandler.collectStatisticToString(book.getTextLines());
+    }
+
+    private void addBook(BookCatalog catalog, Scanner scanner) {
+        String fileLocation = getBookLocation(scanner);
         List<String> stringList = txtFileHandler.readFile(fileLocation);
         Book book = stringHandler.createBook(stringList);
         catalog.addBook(book);
-        List<String> parsedStrings = stringHandler.parse(book.getTextLines());
-        consolePrinter.printStatisticTips();
-
-        Commands command = Commands.fromTitle(scanner.next());
-        String result = stringHandler.collectResultToString(parsedStrings);
-        switch (command) {
-            case PRINT_STATISTIC -> consolePrinter.printStatisticToConsole(result);
-            case WRITE_STATISTIC -> txtFileHandler.writeFile(result);
-        }
     }
 
-    private String getBookLocation() {
+    public String getBookLocation(Scanner scanner) {
         System.out.println("Please enter file name:");
         String fileName = scanner.next();
         return USER_DIRECTORY + fileName + ".txt";
     }
 
-    private String getBookName() {
+    public String getBookName(Scanner scanner) {
         System.out.println("Please enter book name:");
-        scanner.useDelimiter("\n");
         return scanner.next();
     }
 }
