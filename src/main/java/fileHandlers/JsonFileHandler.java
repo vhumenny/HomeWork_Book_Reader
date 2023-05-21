@@ -14,12 +14,14 @@ import java.util.Map;
 @AllArgsConstructor
 public class JsonFileHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String fileLocation = "C:\\Users\\Admin\\dev\\HomeWork\\src\\main\\resources\\bookCatalog.json";
+    private final File fileLocation = new File(
+            "C:\\Users\\Admin\\dev\\HomeWork\\src\\main\\resources\\bookCatalog.json");
 
     public Map<String, Book> readFile() {
         Map<String, Book> bookMap = new HashMap<>();
         try {
-            List<Book> bookList = objectMapper.readValue(new File(fileLocation), new TypeReference<>(){});
+            List<Book> bookList = objectMapper.readValue(fileLocation, new TypeReference<>() {
+            });
             bookList.forEach(book -> bookMap.put(book.getBookName(), book));
         } catch (IOException e) {
             e.printStackTrace();
@@ -29,7 +31,7 @@ public class JsonFileHandler {
 
     public void writeFile(Map<String, Book> bookMap) {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(fileLocation), bookMap.values());
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileLocation, bookMap.values());
         } catch (IOException e) {
             e.printStackTrace();
         }

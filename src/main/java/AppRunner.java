@@ -26,7 +26,7 @@ public class AppRunner {
             switch (command) {
                 case ADD_BOOK -> addBook(catalog);
                 case DELETE_BOOK -> {
-                    String bookName = getBookLocation();
+                    String bookName = getBookName();
                     catalog.removeBook(bookName);
                 }
                 case READ_CATALOG -> System.out.println(catalog.getBookMap());
@@ -42,8 +42,8 @@ public class AppRunner {
     }
 
     private void addBook(BookCatalog catalog) {
-        String bookName = getBookLocation();
-        List<String> stringList = txtFileHandler.readFile(bookName);
+        String fileLocation = getBookLocation();
+        List<String> stringList = txtFileHandler.readFile(fileLocation);
         Book book = stringHandler.createBook(stringList);
         catalog.addBook(book);
         List<String> parsedStrings = stringHandler.parse(book.getTextLines());
@@ -58,9 +58,14 @@ public class AppRunner {
     }
 
     private String getBookLocation() {
+        System.out.println("Please enter file name:");
+        String fileName = scanner.next();
+        return USER_DIRECTORY + fileName + ".txt";
+    }
+
+    private String getBookName() {
         System.out.println("Please enter book name:");
-        String name = scanner.next();
-        if (!name.endsWith(".txt")) return name;
-        else return USER_DIRECTORY + name;
+        scanner.useDelimiter("\n");
+        return scanner.next();
     }
 }
