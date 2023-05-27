@@ -1,4 +1,6 @@
-import entity.Book;
+package bookCatalog;
+
+import bookCatalog.entity.Book;
 
 import java.util.List;
 import java.util.Map;

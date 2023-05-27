@@ -1,8 +1,8 @@
-package fileHandlers;
+package bookCatalog.fileHandlers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entity.Book;
+import bookCatalog.entity.Book;
 import lombok.AllArgsConstructor;
 
 import java.io.File;

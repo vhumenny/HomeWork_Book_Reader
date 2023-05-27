@@ -1,3 +1,5 @@
+package bookCatalog;
+
 public class ConsolePrinter {
 
     public void printStatisticToConsole(String result) {

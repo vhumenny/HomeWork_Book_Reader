@@ -1,5 +1,7 @@
-import entity.Book;
-import fileHandlers.JsonFileHandler;
+package bookCatalog;
+
+import bookCatalog.entity.Book;
+import bookCatalog.fileHandlers.JsonFileHandler;
 import lombok.Data;
 
 import java.util.Map;

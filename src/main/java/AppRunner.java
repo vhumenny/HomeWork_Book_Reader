@@ -1,5 +1,8 @@
-import entity.Book;
-import fileHandlers.TxtFileHandler;
+import bookCatalog.BookCatalog;
+import bookCatalog.ConsolePrinter;
+import bookCatalog.StringHandler;
+import bookCatalog.entity.Book;
+import bookCatalog.fileHandlers.TxtFileHandler;
 
 import java.nio.file.FileSystems;
 import java.util.List;

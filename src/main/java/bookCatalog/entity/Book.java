@@ -1,4 +1,4 @@
-package entity;
+package bookCatalog.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
