@@ -4,6 +4,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Commands {
+    BOOKS("books"),
+    QUIZ("quiz"),
     WRITE_STATISTIC("write"),
     PRINT_STATISTIC("print"),
     READ_CATALOG("read"),

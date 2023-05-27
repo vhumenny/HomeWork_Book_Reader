@@ -58,13 +58,4 @@ public class StringHandler {
         strings.subList(0, 4).clear();
         return new Book(bookName, author, strings);
     }
-
-    public Commands parseCommand(String title) {
-        for (Commands command : Commands.values()) {
-            if (command.getTitle().equalsIgnoreCase(title)) {
-                return command;
-            }
-        }
-        return Commands.NOT_FOUND;
-    }
 }

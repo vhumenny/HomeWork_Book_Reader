@@ -1,4 +1,4 @@
-package quiz.config;
+package config;
 
 import java.util.Properties;
 

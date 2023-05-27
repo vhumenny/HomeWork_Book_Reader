@@ -1,4 +1,4 @@
-package quiz.config;
+package config;
 
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @UtilityClass
-public class HibernateSession {
+public class HibernateConfig {
     private static SessionFactory sessionFactory;
     private static final Properties properties = new Properties();
     private final static String URL = "db.url";

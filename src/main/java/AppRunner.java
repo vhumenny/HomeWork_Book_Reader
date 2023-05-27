@@ -13,6 +13,7 @@ public class AppRunner {
     private final StringHandler stringHandler = new StringHandler();
     private final TxtFileHandler txtFileHandler = new TxtFileHandler();
     private final ConsolePrinter consolePrinter = new ConsolePrinter();
+    private final CommandParser commandParser = new CommandParser();
     private final BookCatalog catalog = new BookCatalog();
     private static final String USER_DIRECTORY = System.getProperty("user.dir")
                                                  + FileSystems.getDefault().getSeparator();
@@ -21,11 +22,11 @@ public class AppRunner {
         consolePrinter.printConsoleCommands();
         Scanner scanner = new Scanner(System.in);
         scanner.useDelimiter("\n");
-        Commands command = stringHandler.parseCommand(scanner.next());
+        Commands command = commandParser.parseCommand(scanner.next());
         while (!Objects.equals(command, Commands.EXIT)) {
             executeCommand(command, scanner);
             consolePrinter.printConsoleCommands();
-            command = stringHandler.parseCommand(scanner.next());
+            command = commandParser.parseCommand(scanner.next());
         }
         catalog.saveCatalog();
         scanner.close();
