@@ -47,7 +47,7 @@ public class HibernateConfig {
     }
 
     public static void loadProperties() {
-        try (var inputstream = PropertiesLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
+        try (var inputstream = HibernateConfig.class.getClassLoader().getResourceAsStream("config.properties")) {
             properties.load(inputstream);
         } catch (IOException e) {
             throw new RuntimeException(e);

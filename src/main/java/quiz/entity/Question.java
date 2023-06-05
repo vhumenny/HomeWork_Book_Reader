@@ -13,4 +13,6 @@ public class Question {
     private Long id;
     private String text;
     private Long topic_id;
+    @ManyToOne
+    Topic topic;
 }
